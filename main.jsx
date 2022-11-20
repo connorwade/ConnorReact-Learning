@@ -1,4 +1,4 @@
-import ConnoReact from "./ConnoReact";
+import ConnoReact from "./lib/ConnoReact";
 
 /** @jsx ConnoReact.createElement */
 const element = (
