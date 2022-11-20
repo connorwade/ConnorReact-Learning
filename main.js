@@ -1,19 +1,55 @@
-//1. We breakdown our HTML node to an JS object
-const element = {
-  type: "h1",
-  props: {
-    title: "foo",
-    children: "Hello",
-  },
+// Replace: node creation with a function that creates element objects from jsx
+// OLD:
+// const node = document.createElement(element.type);
+// node["title"] = element.props.title;
+
+// const text = document.createTextNode("");
+// text["nodeValue"] = element.props.children;
+// NEW:
+
+function createElement(type, props, ...children) {
+  return {
+    type,
+    props: {
+      ...props,
+      children: children.map((child) =>
+        typeof child === "object" ? child : createTextElement(child)
+      ),
+    },
+  };
+}
+
+function createTextElement(text) {
+  return {
+    type: "TEXT_ELEMENT",
+    props: {
+      nodeValue: text,
+      children: [],
+    },
+  };
+}
+
+function render(element, container) {
+  // TODO create dom nodes
+}
+
+const ConnoReact = {
+  createElement,
+  render,
 };
-//2. We grab the root of our HTML file
+
+/** @jsx ConnoReact.createElement */
+const element = (
+  <div id="foo">
+    <a>bar</a>
+    <b />
+  </div>
+);
+
+// Replace: Appending with DOM rendering function
+// OLD:
+// node.appendChild(text);
+// root.appendChild(node);
+// NEW:
 const root = document.getElementById("root");
-//3. We build the node from JS object
-const node = document.createElement(element.type);
-node["title"] = element.props.title;
-//4. We set the text within the node
-const text = document.createTextNode("");
-text["nodeValue"] = element.props.children;
-//5. We append text to the node and then we append the node to the root
-node.appendChild(text);
-root.appendChild(node);
+ConnoReact.render(element, root);
